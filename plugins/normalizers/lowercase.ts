@@ -1,0 +1,1 @@
+export const lowercase = (value: string): string => value.toLowerCase();

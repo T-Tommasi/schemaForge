@@ -1,6 +1,32 @@
 /**
  * schemaForge - Data transformation and schema conversion library
  * @packageDocumentation
+ * /
+ * ## Vendors
+ * /
+ * Built-in vendors (e.g. 'example') auto-register when the package is imported.
+ * Custom vendors can be registered independently via {@link registerVendor}.
+ * /
+ * @example
+ * import { registerVendor, schemaForge } from 'schemaforge';
+ * /
+ * // Register custom vendor—no built-in plugins required
+ * registerVendor('myCompany', {
+ *   name: 'myCompany',
+ *   parser: 'csv',
+ *   normalizers: ['trim', 'lowercase'],
+ *   transformers: ['toNumber'],
+ *   defaults: { uuidStrategy: 'v4' }
+ * });
+ * /
+ * const result = await schemaForge({
+ *   origin: 'code,name\n001,Test',
+ *   target: 'product',
+ *   vendor: 'myCompany',
+ *   valueFields: ['code', 'name'],
+ *   uuid: { type: 'v4' },
+ *   exportFormat: 'json'
+ * });
  */
 
 // Load vendors on import - their index registers built-in vendors

@@ -43,6 +43,32 @@ export function registerPlugin(
   });
 }
 
+/**
+ * Register a custom vendor preset.
+ * @param name - Unique vendor identifier
+ * @param config - Vendor configuration (parser, normalizers, transformers, defaults)
+ *
+ * @example
+ * // Register standalone vendor—no built-in plugins required
+ * import { registerVendor, schemaForge } from 'schemaforge';
+ *
+ * registerVendor('myCompany', {
+ *   name: 'myCompany',
+ *   parser: 'csv',
+ *   normalizers: ['trim', 'lowercase'],
+ *   transformers: ['toNumber'],
+ *   defaults: { uuidStrategy: 'v4' }
+ * });
+ *
+ * const result = await schemaForge({
+ *   origin: 'code,name\n001,Test',
+ *   target: 'product',
+ *   vendor: 'myCompany',  // uses registered vendor
+ *   valueFields: ['code', 'name'],
+ *   uuid: { type: 'v4' },
+ *   exportFormat: 'json'
+ * });
+ */
 export function registerVendor(name: string, config: PluginConfig): void {
   registry.set(name, { type: 'vendor', config });
 }

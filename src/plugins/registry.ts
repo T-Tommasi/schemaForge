@@ -32,11 +32,14 @@ const pluginRegistry = new Map<string, PluginFn>();
 export function registerPlugin(
   name: string,
   fn: PluginFn,
-  pluginType: 'transformer' | 'normalizer',
+  pluginType: 'transformer' | 'normalizer'
 ): void {
   pluginRegistry.set(name, fn);
   registry.set(name, {
-    type: 'plugin', name, fn, pluginType
+    type: 'plugin',
+    name,
+    fn,
+    pluginType,
   });
 }
 

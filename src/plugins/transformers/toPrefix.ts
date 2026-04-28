@@ -20,10 +20,7 @@ export interface ToPrefixOptions {
   suffix?: string;
 }
 
-export const toPrefix = (
-  value: string,
-  options?: ToPrefixOptions,
-): string => {
+export const toPrefix = (value: string, options?: ToPrefixOptions): string => {
   // No prefix configured = passthrough (identity transform)
   if (!options?.prefix) return value;
   return `${options.prefix}${value}${options.suffix ?? ''}`;

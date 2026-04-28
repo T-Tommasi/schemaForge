@@ -9,7 +9,7 @@ export interface CSVParseOptions {
 
 export function parseCSV(
   filePathOrData: string,
-  options: CSVParseOptions = {},
+  options: CSVParseOptions = {}
 ): Promise<Record<string, unknown>[]> {
   return new Promise((resolve, reject) => {
     const isFilePath = !filePathOrData.includes('\n') && filePathOrData.trim().length > 0;

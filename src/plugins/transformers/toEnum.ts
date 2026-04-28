@@ -4,10 +4,7 @@ export interface ToEnumOptions<T extends string> {
   caseSensitive?: boolean;
 }
 
-export function toEnum<T extends string>(
-  value: string,
-  options?: ToEnumOptions<T>,
-): T | null {
+export function toEnum<T extends string>(value: string, options?: ToEnumOptions<T>): T | null {
   if (!options || !value.trim()) return null;
   if (!value.trim()) return null;
 

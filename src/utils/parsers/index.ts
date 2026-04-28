@@ -8,7 +8,7 @@ export interface Parser {
 export async function parseByFormat(
   format: string,
   source: string,
-  options?: Record<string, unknown>,
+  options?: Record<string, unknown>
 ): Promise<Record<string, unknown>[]> {
   switch (format) {
     case 'csv': {

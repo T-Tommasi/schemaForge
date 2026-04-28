@@ -32,9 +32,7 @@ export function exportToXML(rows: ParsedRow[], options: XMLExportOptions = {}): 
     lines.push(`${indent + indent}<values>`);
 
     for (const { field, value } of row.values) {
-      lines.push(
-        `${indent + indent + indent}<${field}>${escapeXml(String(value))}</${field}>`,
-      );
+      lines.push(`${indent + indent + indent}<${field}>${escapeXml(String(value))}</${field}>`);
     }
 
     lines.push(`${indent + indent}</values>`);

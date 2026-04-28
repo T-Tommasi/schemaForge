@@ -10,7 +10,7 @@ export { exportToJSON } from './json';
 export function exportRows(
   rows: ParsedRow[],
   format: ExportFormat,
-  options?: Record<string, unknown>,
+  options?: Record<string, unknown>
 ): string {
   if (!rows?.length) {
     return '';

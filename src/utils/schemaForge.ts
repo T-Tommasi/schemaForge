@@ -47,10 +47,7 @@ function resolveConfig(options: SchemaForgeOptions): ResolvedConfig {
  */
 export async function schemaForge(options: SchemaForgeOptions): Promise<ParsedRow[]> {
   const {
-    origin,
-    target,
-    uuid,
-    valueFields,
+    origin, target, uuid, valueFields
   } = options;
 
   const config = resolveConfig(options);

@@ -25,16 +25,16 @@ export type TransformerName = keyof typeof transformers;
 const builtInTransformers = transformers;
 
 export function getTransformer(
-  name: string,
+  name: string
 ): (value: string, options?: Record<string, unknown>) => unknown {
   const customPlugin = getPlugin(name);
   if (customPlugin) {
     return customPlugin as TransformerFn;
   }
-  return (
-    builtInTransformers[name as TransformerName]
-    ?? ((v: string) => v)
-  ) as (value: string, options?: Record<string, unknown>) => unknown;
+  return (builtInTransformers[name as TransformerName] ?? ((v: string) => v)) as (
+    value: string,
+    options?: Record<string, unknown>
+  ) => unknown;
 }
 
 export { registerPlugin } from '../registry';

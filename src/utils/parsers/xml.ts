@@ -73,7 +73,7 @@ function parseXMLString(xml: string, options: XMLParseOptions): Record<string, u
  */
 export async function parseXML(
   filePathOrData: string,
-  options: XMLParseOptions = {},
+  options: XMLParseOptions = {}
 ): Promise<Record<string, unknown>[]> {
   const data = filePathOrData.trim();
 

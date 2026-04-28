@@ -28,6 +28,39 @@ const defaultOptions: XMLParseOptions = {
 };
 
 /**
+ * Parse XML string to record array using fast-xml-parser
+ * @param xml - Raw XML string content
+ * @param options - Parser configuration options
+ * @returns Array of parsed record objects
+ */
+function parseXMLString(xml: string, options: XMLParseOptions): Record<string, unknown>[] {
+  const parserOptions = {
+    ignoreAttributes: options.ignoreAttributes ?? defaultOptions.ignoreAttributes,
+    attributeNamePrefix: options.attributeNamePrefix ?? defaultOptions.attributeNamePrefix,
+    textNodeName: options.textNodeName ?? defaultOptions.textNodeName,
+    trimValues: options.trimWhitespace ?? defaultOptions.trimWhitespace,
+    isArray: () => true,
+  };
+
+  const parser = new XMLParser(parserOptions);
+  const parsed = parser.parse(xml);
+
+  // Normalize output to always be an array of records
+  if (Array.isArray(parsed)) {
+    return parsed as Record<string, unknown>[];
+  }
+
+  const rootKey = Object.keys(parsed)[0];
+  const rootValue = parsed[rootKey];
+
+  if (Array.isArray(rootValue)) {
+    return rootValue as Record<string, unknown>[];
+  }
+
+  return [rootValue as Record<string, unknown>];
+}
+
+/**
  * Parse XML string or file into array of record objects
  * @param filePathOrData - XML string content or file path
  * @param options - Parsing configuration options
@@ -60,37 +93,4 @@ export async function parseXML(
   }
 
   return parseXMLString(xmlContent, options);
-}
-
-/**
- * Parse XML string to record array using fast-xml-parser
- * @param xml - Raw XML string content
- * @param options - Parser configuration options
- * @returns Array of parsed record objects
- */
-function parseXMLString(xml: string, options: XMLParseOptions): Record<string, unknown>[] {
-  const parserOptions = {
-    ignoreAttributes: options.ignoreAttributes ?? defaultOptions.ignoreAttributes,
-    attributeNamePrefix: options.attributeNamePrefix ?? defaultOptions.attributeNamePrefix,
-    textNodeName: options.textNodeName ?? defaultOptions.textNodeName,
-    trimValues: options.trimWhitespace ?? defaultOptions.trimWhitespace,
-    isArray: () => true,
-  };
-
-  const parser = new XMLParser(parserOptions);
-  const parsed = parser.parse(xml);
-
-  // Normalize output to always be an array of records
-  if (Array.isArray(parsed)) {
-    return parsed as Record<string, unknown>[];
-  }
-
-  const rootKey = Object.keys(parsed)[0];
-  const rootValue = parsed[rootKey];
-
-  if (Array.isArray(rootValue)) {
-    return rootValue as Record<string, unknown>[];
-  }
-
-  return [rootValue as Record<string, unknown>];
 }

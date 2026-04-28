@@ -14,11 +14,19 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint'],
+  settings: {
+    'import/resolver': {
+      typescript: {
+        project: './tsconfig.json',
+      },
+    },
+  },
   rules: {
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/no-use-before-define': ['off'],
     'import/extensions': ['off'],
     'import/no-extraneous-dependencies': ['off'],
+    'import/prefer-default-export': ['off'],
     'no-restricted-syntax': ['off'],
     'no-tabs': ['off'],
     'prefer-destructuring': ['off'],

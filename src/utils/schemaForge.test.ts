@@ -16,6 +16,7 @@ describe('schemaForge', () => {
       uuid: { type: 'v4' },
       exportFormat: 'json',
       valueFields: ['CODICE', 'DESCRIZIONE'],
+      plugin: 'csv',
     });
 
     expect(result[0].id).toMatch(
@@ -33,6 +34,7 @@ describe('schemaForge', () => {
       uuid: { type: 'v5', fields: ['CODICE'] },
       exportFormat: 'json',
       valueFields: ['CODICE'],
+      plugin: 'csv',
     });
 
     // Same input produces same UUID
@@ -44,6 +46,7 @@ describe('schemaForge', () => {
       uuid: { type: 'v5', fields: ['CODICE'] },
       exportFormat: 'json',
       valueFields: ['CODICE'],
+      plugin: 'csv',
     });
 
     expect(result[0].id).toBe(result2[0].id);
@@ -59,6 +62,7 @@ describe('schemaForge', () => {
       uuid: { type: 'v4' },
       exportFormat: 'json',
       valueFields: ['NAME'],
+      plugin: 'csv',
     });
 
     expect(result[0].values[0].value).toBe('test');
@@ -74,8 +78,24 @@ describe('schemaForge', () => {
       uuid: { type: 'v4' },
       exportFormat: 'json',
       valueFields: ['NUM'],
+      plugin: 'csv',
     });
 
     expect(result[0].values[0].value).toBe(42);
+  });
+
+  it('throws error when no plugin selected', async () => {
+    const csvData = 'NAME\nTEST';
+    await expect(
+      schemaForge({
+        origin: csvData,
+        target: 'item',
+        normalizers: [],
+        transformers: [],
+        uuid: { type: 'v4' },
+        exportFormat: 'json',
+        valueFields: ['NAME'],
+      }),
+    ).rejects.toThrow('no plugin selected for parsing!');
   });
 });

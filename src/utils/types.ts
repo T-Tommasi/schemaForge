@@ -33,12 +33,14 @@ export interface ParsedRow {
 export interface SchemaForgeOptions {
   origin: string;
   target: string;
+  parser?: string;
   normalizers: string[];
   transformers: string[];
   uuid: UUIDStrategy;
   exportFormat: ExportFormat;
   valueFields: string[];
   vendor?: string;
+  plugin?: string;
 }
 
 export interface VendorPlugin {

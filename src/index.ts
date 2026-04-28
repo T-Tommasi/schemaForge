@@ -26,5 +26,16 @@ export type { NormalizerName } from './plugins/normalizers';
 export { transformers, getTransformer } from './plugins/transformers';
 export type { TransformerName } from './plugins/transformers';
 
+export {
+  registerPlugin,
+  registerVendor,
+  getVendor,
+  listPlugins,
+  getPlugin,
+} from './plugins/registry';
+export type { PluginConfig } from './plugins/registry';
+
+export { resolveVendorOptions } from './plugins/vendors';
+
 export { resolveUUIDGenerator } from './utils/uuid';
 export type { UUIDGenerator } from './utils/uuid';

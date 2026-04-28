@@ -1,20 +1,3 @@
-export interface ToDateOptions {
-  format?: string;
-  nanValue?: Date;
-}
-
-export const toDate = (value: string, options?: ToDateOptions): Date | null => {
-  if (!value.trim()) return null;
-
-  if (options?.format) {
-    const date = parseDateWithFormat(value, options.format);
-    return date ?? options.nanValue ?? null;
-  }
-
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? (options?.nanValue ?? null) : parsed;
-};
-
 function parseDateWithFormat(value: string, format: string): Date | null {
   const parts = value.match(/\d+/g);
   if (!parts) return null;
@@ -41,3 +24,20 @@ function parseDateWithFormat(value: string, format: string): Date | null {
 
   return null;
 }
+
+export interface ToDateOptions {
+  format?: string;
+  nanValue?: Date;
+}
+
+export const toDate = (value: string, options?: ToDateOptions): Date | null => {
+  if (!value.trim()) return null;
+
+  if (options?.format) {
+    const date = parseDateWithFormat(value, options.format);
+    return date ?? options.nanValue ?? null;
+  }
+
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? (options?.nanValue ?? null) : parsed;
+};

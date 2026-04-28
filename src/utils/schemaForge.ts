@@ -4,12 +4,39 @@
  * @description Transforms raw data through normalization, transformation, and UUID generation.
  */
 
-import type { SchemaForgeOptions, ParsedRow, ExportFormat } from './types';
+import type { SchemaForgeOptions, ParsedRow } from './types';
 import { parseByFormat } from './parsers';
 import { exportRows } from './exporters';
 import { resolveUUIDGenerator } from './uuid';
-import { normalizers } from '../plugins/normalizers';
-import { transformers } from '../plugins/transformers';
+import { getNormalizer } from '../plugins/normalizers';
+import { getTransformer } from '../plugins/transformers';
+import { resolveVendorOptions } from '../plugins/vendors';
+
+const NO_PLUGIN_ERROR = 'no plugin selected for parsing!';
+
+interface ResolvedConfig {
+  parser: string;
+  normalizers: string[];
+  transformers: string[];
+}
+
+function resolveConfig(options: SchemaForgeOptions): ResolvedConfig {
+  const {
+    plugin, vendor, parser, normalizers, transformers
+  } = options;
+
+  if (!plugin && !vendor) {
+    throw new Error(NO_PLUGIN_ERROR);
+  }
+
+  const resolved = resolveVendorOptions(vendor, options);
+
+  return {
+    parser: parser ?? resolved.parser,
+    normalizers: normalizers ?? resolved.normalizers,
+    transformers: transformers ?? resolved.transformers,
+  };
+}
 
 /**
  * Transform raw data rows into schema-compliant records
@@ -20,13 +47,12 @@ export async function schemaForge(options: SchemaForgeOptions): Promise<ParsedRo
   const {
     origin,
     target,
-    normalizers: normalizerNames,
-    transformers: transformerNames,
     uuid,
     valueFields,
   } = options;
 
-  const rows = await parseByFormat('csv', origin);
+  const config = resolveConfig(options);
+  const rows = await parseByFormat(config.parser, origin);
   const uuidGenerator = resolveUUIDGenerator(uuid);
   const results: ParsedRow[] = [];
 
@@ -36,25 +62,15 @@ export async function schemaForge(options: SchemaForgeOptions): Promise<ParsedRo
     const values = valueFields.map((field) => {
       let processedValue: string = String(row[field] ?? '');
 
-      // Apply normalizers in sequence (e.g., trim -> lowercase)
-      for (const name of normalizerNames) {
-        const normalizer = normalizers[name as keyof typeof normalizers];
-        if (normalizer) {
-          processedValue = normalizer(processedValue);
-        }
+      for (const name of config.normalizers) {
+        const normalizer = getNormalizer(name);
+        processedValue = normalizer(processedValue);
       }
 
-      // Apply transformers in sequence (e.g., toNumber -> toDate)
-      // Each transformer receives the output of the previous one
       let transformedValue: unknown = processedValue;
-      for (const name of transformerNames) {
-        const transformer = transformers[name as keyof typeof transformers];
-        if (transformer) {
-          transformedValue = (transformer as (v: string, o?: Record<string, unknown>) => unknown)(
-            transformedValue as string,
-            {},
-          );
-        }
+      for (const name of config.transformers) {
+        const transformer = getTransformer(name);
+        transformedValue = transformer(transformedValue as string, {});
       }
 
       return { field, value: transformedValue };

@@ -1,5 +1,3 @@
-import type { ParsedRow } from '../types';
-
 export { parseCSV } from './csv';
 export { parseXML } from './xml';
 
@@ -13,12 +11,14 @@ export async function parseByFormat(
   options?: Record<string, unknown>,
 ): Promise<Record<string, unknown>[]> {
   switch (format) {
-    case 'csv':
+    case 'csv': {
       const { parseCSV } = await import('./csv');
       return parseCSV(source, options);
-    case 'xml':
+    }
+    case 'xml': {
       const { parseXML } = await import('./xml');
       return parseXML(source, options);
+    }
     default:
       throw new Error(`Unsupported format: ${format}`);
   }

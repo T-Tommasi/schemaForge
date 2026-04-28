@@ -6,6 +6,16 @@ export interface XMLExportOptions {
   indent?: string;
 }
 
+function escapeXml(str: string): string {
+  let result = str;
+  result = result.replace(/&/g, '&');
+  result = result.replace(/</g, '<');
+  result = result.replace(/>/g, '>');
+  result = result.replace(/"/g, '"');
+  result = result.replace(/'/g, '&#39;');
+  return result;
+}
+
 export function exportToXML(rows: ParsedRow[], options: XMLExportOptions = {}): string {
   const root = options.rootElement || 'data';
   const item = options.itemElement || 'item';
@@ -33,14 +43,4 @@ export function exportToXML(rows: ParsedRow[], options: XMLExportOptions = {}): 
 
   lines.push(`</${root}>`);
   return lines.join('\n');
-}
-
-function escapeXml(str: string): string {
-  let result = str;
-  result = result.split('&').join('&amp;');
-  result = result.split('<').join('&lt;');
-  result = result.split('>').join('&gt;');
-  result = result.split('"').join('&quot;');
-  result = result.split("'").join('&apos;');
-  return result;
 }

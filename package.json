@@ -1,10 +1,25 @@
 {
-  "name": "schemaforge",
+  "name": "@t-tommasi/schemaforge",
   "version": "0.1.0",
   "type": "module",
-  "description": "Data transformation and schema conversion library",
+  "description": "A TypeScript library for converting messy structured data into normalized schema-ready rows.",
   "main": "./dist/index.js",
+  "license": "Apache-2.0",
+  "author": "Thomas Tommasi",
   "types": "./dist/index.d.ts",
+    "repository": {
+    "type": "git",
+    "url": "git+https://github.com/T-Tommasi/schemaForge.git"
+  },
+  "keywords": [
+    "etl",
+    "csv",
+    "xml",
+    "schema",
+    "data-transformation",
+    "normalization",
+    "typescript"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -14,7 +29,9 @@
     "./plugins/*": "./dist/plugins/*.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc",
@@ -23,7 +40,8 @@
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
-    "check": "npm run lint && npm run build"
+    "check": "npm run lint && npm run test && npm run build",
+    "prepublishOnly": "npm run check"
   },
   "dependencies": {
     "fast-xml-parser": "^4.5.0",

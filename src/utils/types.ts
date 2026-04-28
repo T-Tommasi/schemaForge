@@ -36,6 +36,7 @@ export interface SchemaForgeOptions {
   parser?: string;
   normalizers: string[];
   transformers: string[];
+  transformerOptions?: Record<string, Record<string, unknown>>;
   uuid: UUIDStrategy;
   exportFormat: ExportFormat;
   valueFields: string[];

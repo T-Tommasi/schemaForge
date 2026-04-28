@@ -3,6 +3,9 @@
  * @packageDocumentation
  */
 
+// Load vendors on import - their index registers built-in vendors
+import './plugins/vendors';
+
 export { schemaForge, schemaForgeAndExport } from './utils/schemaForge';
 export type { SchemaForgeOptions, ParsedRow, ExportFormat } from './utils/schemaForge';
 

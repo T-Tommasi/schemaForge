@@ -1,6 +1,5 @@
-/**
- * Tests for core schemaForge function
- */
+// Import vendors to register them before tests
+import '../plugins/vendors/example';
 
 import { describe, it, expect } from 'vitest';
 import { schemaForge } from './schemaForge';
@@ -97,5 +96,46 @@ describe('schemaForge', () => {
         valueFields: ['NAME'],
       }),
     ).rejects.toThrow('no plugin selected for parsing!');
+  });
+
+  it('passes options to transformers', async () => {
+    const csvData = 'CODE,NAME\nABC,Test';
+    const result = await schemaForge({
+      origin: csvData,
+      target: 'item',
+      normalizers: [],
+      transformers: ['toPrefix'],
+      transformerOptions: {
+        toPrefix: { prefix: 'SKU-' },
+      },
+      uuid: { type: 'v4' },
+      exportFormat: 'json',
+      valueFields: ['CODE'],
+      plugin: 'csv',
+    });
+
+    expect(result[0].values[0].value).toBe('SKU-ABC');
+  });
+
+  it('uses vendor preset', async () => {
+    const csvData = 'CODE\nitem';
+    const result = await schemaForge({
+      origin: csvData,
+      target: 'item',
+      normalizers: [],
+      transformers: ['toPrefix'],
+      transformerOptions: {
+        toPrefix: { prefix: '[', suffix: ']' },
+      },
+      uuid: { type: 'v4' },
+      exportFormat: 'json',
+      valueFields: ['CODE'],
+      vendor: 'example',
+    });
+
+    expect(result[0].type).toBe('item');
+    // normalizers: trim + lowercase on 'item' = 'item'
+    // transformer: toPrefix wraps in brackets
+    expect(result[0].values[0].value).toBe('[item]');
   });
 });

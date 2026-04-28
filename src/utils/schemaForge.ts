@@ -18,6 +18,7 @@ interface ResolvedConfig {
   parser: string;
   normalizers: string[];
   transformers: string[];
+  transformerOptions: Record<string, Record<string, unknown>>;
 }
 
 function resolveConfig(options: SchemaForgeOptions): ResolvedConfig {
@@ -35,6 +36,7 @@ function resolveConfig(options: SchemaForgeOptions): ResolvedConfig {
     parser: parser ?? resolved.parser,
     normalizers: normalizers ?? resolved.normalizers,
     transformers: transformers ?? resolved.transformers,
+    transformerOptions: options.transformerOptions ?? {},
   };
 }
 
@@ -70,7 +72,8 @@ export async function schemaForge(options: SchemaForgeOptions): Promise<ParsedRo
       let transformedValue: unknown = processedValue;
       for (const name of config.transformers) {
         const transformer = getTransformer(name);
-        transformedValue = transformer(transformedValue as string, {});
+        const opts = config.transformerOptions[name] ?? {};
+        transformedValue = transformer(transformedValue as string, opts);
       }
 
       return { field, value: transformedValue };
